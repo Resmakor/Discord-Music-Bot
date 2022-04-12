@@ -14,7 +14,7 @@ import colour
 import discord
 from discord.ext import commands
 
-from discord.ext.commands import has_permissions #to gdybym chcial zrobic bany
+from discord.ext.commands import has_permissions
 
 from discord.ext.commands import Bot
 import random
@@ -66,9 +66,9 @@ async def on_message(message):
         for slowo in slowa:
             if slowo in message.content:
                 if slowo == 'Xd':
-                    await message.channel.send('Tak sie nie pisze "XD" mordo')
+                    await message.channel.send('Xd is not an emote!')
                 else:
-                    await message.channel.send('Co cie tak smieszy XD')
+                    await message.channel.send('Haha xD')
     await client.process_commands(message)
 
 @client.command()
@@ -123,7 +123,7 @@ def add_to_queue(url):
     list_of_songs.append(str(url))
 
 # Function adds song to embed
-embed_queue = discord.Embed(title = "Kolejka  🎵 🎵 🎵", url = "https://github.com/Resmakor", color = 0x8FE40C)
+embed_queue = discord.Embed(title = "Queue  🎵 🎵 🎵", url = "https://github.com/Resmakor", color = 0x8FE40C)
 def add_to_embed(video_title, url, duration):
     global embed_queue
     min_dur = datetime.timedelta(seconds = duration)
@@ -362,7 +362,7 @@ async def skip(ctx):
 async def clear(ctx, amount : int):
     deleted_messages = await ctx.channel.purge(limit = amount, check = lambda x: bot_prefix in x.content or bot_id == x.author.id)
     how_many = len(deleted_messages)
-    await ctx.send(f"Usunieto **{how_many}** wiadomosci! ♻️", delete_after = 10)
+    await ctx.send(f"**{how_many}** messages have been deleted! ♻️", delete_after = 10)
 
 @client.command()
 async def loop(ctx):
@@ -382,26 +382,26 @@ async def loop(ctx):
 
 @client.command()
 async def coin(ctx):
-    do_wylosowania = ('Orzeł', 'Reszka')
+    do_wylosowania = ('Heads', 'Tails')
     await ctx.channel.send(random.choice(do_wylosowania))
 
 # ctx - kanal na ktorym zostala wyslana wiadomosc z komenda :)
 @client.command()
 async def help(ctx):
     embed = discord.Embed(title = "Commands", url = "https://github.com/Resmakor", description = "powered by Resmakor", color = 0xeb1e1e)
-    embed.add_field(name = f"{bot_prefix}play <nazwa>", value = "Bot wlacza muzyke i dolacza do kanalu glosowego. Jezeli juz cos gra, to dodaje do kolejki", inline = False)
-    embed.add_field(name = f"{bot_prefix}pause", value = "Bot zatrzymuje piosenke", inline = False)
-    embed.add_field(name = f"{bot_prefix}resume", value = "Bot wznawia piosenke", inline = False)
-    embed.add_field(name = f"{bot_prefix}skip", value = "Bot pomija piosenke", inline = False)
-    embed.add_field(name = f"{bot_prefix}queue", value = "Bot wyswietla status kolejki", inline = False)
-    embed.add_field(name = f"{bot_prefix}loop", value = "Bot zapetla kolejny utwor az do odwolania! Odwolanie tez komenda 'loop'", inline = False)
-    embed.add_field(name = f"{bot_prefix}forward <ilosc>", value = "Bot przewija piosenke o 'ilosc' sekund'", inline = False)
-    embed.add_field(name = f"{bot_prefix}join", value = "Bot dolacza do kanalu glosowego", inline = False)
-    embed.add_field(name = f"{bot_prefix}dc", value = "Bot opuszcza kanal glosowy", inline = False)
-    embed.add_field(name = f"{bot_prefix}coin", value = "Bot rzuca moneta", inline = False)
-    embed.add_field(name = f"{bot_prefix}cannon <discordmember>", value = "Bot rzuca uzytkownikiem po kanalach, pozniej wraca do swojego", inline = False)
-    embed.add_field(name = f"{bot_prefix}clear <ilosc>", value = "Bot usuwa wiadomosci z komendami i swoje wlasne do <ilosc> wstecz!", inline = False)
-    embed.add_field(name = f"{bot_prefix}listen <discordmember>", value = "Bot sprawdza czego ktos slucha na Spotify", inline = False)
+    embed.add_field(name = f"{bot_prefix}play <song name>", value = "Bot turns the music on and joins voice channel. If something is being played, song is added to queue", inline = False)
+    embed.add_field(name = f"{bot_prefix}pause", value = "Bot pauses song", inline = False)
+    embed.add_field(name = f"{bot_prefix}resume", value = "Bot resumes song", inline = False)
+    embed.add_field(name = f"{bot_prefix}skip", value = "Bot skips song", inline = False)
+    embed.add_field(name = f"{bot_prefix}queue", value = "Bot shows queue status", inline = False)
+    embed.add_field(name = f"{bot_prefix}loop", value = "Bot loops next song till someone uses 'loop' command again!", inline = False)
+    embed.add_field(name = f"{bot_prefix}forward <value>", value = "Bot rewinds the song by the 'value' seconds", inline = False)
+    embed.add_field(name = f"{bot_prefix}join", value = "Bot joins voice channel", inline = False)
+    embed.add_field(name = f"{bot_prefix}dc", value = "Bot leaves voice channel", inline = False)
+    embed.add_field(name = f"{bot_prefix}coin", value = "Bot toss a coin", inline = False)
+    embed.add_field(name = f"{bot_prefix}cannon <discordmember>", value = "User is being thrown to some specific channels", inline = False)
+    embed.add_field(name = f"{bot_prefix}clear <value>", value = "Bot deletes messages with commands and its own back <value> messages", inline = False)
+    embed.add_field(name = f"{bot_prefix}listen <discordmember>", value = "Bot sends what someone is listening to on Spotify", inline = False)
     await ctx.send(embed=embed, delete_after = 30)
 
 
