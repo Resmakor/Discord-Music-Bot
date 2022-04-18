@@ -104,9 +104,7 @@ async def cannon(ctx, member : discord.Member):
     if działonowy in ctx.author.roles:
         current_channel = member.voice.channel.id
         channel_ids = [748293007765274654, 690951616047742996, 753960037164122245, 690951721874096239, 782001116313288734]
-        if current_channel not in channel_ids:
-            channel_ids.append(current_channel)
-
+        channel_ids.append(current_channel)
         for channel_id in channel_ids:
             channel = client.get_channel(channel_id)
             await member.move_to(channel)
@@ -140,8 +138,7 @@ async def queue(ctx):
 async def show_status(ctx, video_title, duration, id, colour_id):
     min_dur = datetime.timedelta(seconds = duration)
     quick_embed = discord.Embed(title = f"**{video_title}** 🎵", description = f'Song duration **{min_dur}**', color = colour_id)
-    quick_embed.set_thumbnail(url = f"https://img.youtube.com/vi/{id}/sddefault.jpg")
-
+    quick_embed.set_thumbnail(url = f"https://img.youtube.com/vi/{id}/0.jpg")
     await ctx.channel.send(embed = quick_embed)
     await client.change_presence(activity = discord.Activity(type = discord.ActivityType.listening, name = video_title))
     
@@ -260,7 +257,7 @@ async def play(ctx, url1 = "", url2 = "", url3 = "", url4 = "", url5 = "", url6 
     if not ctx.guild.voice_client in client.voice_clients:
         channel = ctx.author.voice.channel
         await channel.connect()
-        
+
     play_queue() 
 
 @client.command()
@@ -349,7 +346,7 @@ async def resume(ctx):
 async def skip(ctx):
     time.sleep(0.5)
     voice = get(client.voice_clients, guild = ctx.guild)
-    if voice.is_playing():
+    if voice.is_playing() or voice.is_paused():
         global FFMPEG_OPTIONS
         await ctx.channel.send('Song **skipped** ⏹️')
         voice.stop()
