@@ -121,7 +121,7 @@ def add_to_queue(url):
     list_of_songs.append(str(url))
 
 # Function adds song to embed
-embed_queue = discord.Embed(title = "Queue  🎵 🎵 🎵", url = "https://github.com/Resmakor", color = 0x8FE40C)
+embed_queue = discord.Embed(title = "Queue  🎵 🎵 🎵", url = "https://github.com/Resmakor", color = 0x44a6c0)
 def add_to_embed(video_title, url, duration):
     global embed_queue
     min_dur = datetime.timedelta(seconds = duration)
@@ -224,9 +224,8 @@ def play_queue():
 async def play(ctx, url1 = "", url2 = "", url3 = "", url4 = "", url5 = "", url6 = ""):
 
     YDL_OPTIONS = {'format': 'bestaudio', 'noplaylist': 'True'}
-    global ctx_queue
-    voice = get(client.voice_clients, guild = ctx.guild)
-
+    global ctx_queue, embed_queue, list_of_songs
+    
     url = url1 + url2 + url3 + url4 + url5 + url6
     print(url)
 
@@ -252,14 +251,19 @@ async def play(ctx, url1 = "", url2 = "", url3 = "", url4 = "", url5 = "", url6 
                 video_title = info.get('title', None)
                 add_to_queue(url)
                 add_to_embed(video_title, url, info['duration'])
+                time.sleep(0.2)
         ctx_queue.append(ctx)
 
     if not ctx.guild.voice_client in client.voice_clients:
         channel = ctx.author.voice.channel
         await channel.connect()
 
-    play_queue() 
+    voice = get(client.voice_clients, guild = ctx.guild)
+    if (len(list_of_songs) > 1 or (voice.is_playing() or voice.is_paused())):
+        await ctx.channel.send(embed = embed_queue, delete_after = 8)
 
+    play_queue()
+    
 @client.command()
 async def pause(ctx):
     time.sleep(0.1)
