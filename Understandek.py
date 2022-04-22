@@ -94,7 +94,7 @@ async def listen(ctx, member : discord.Member):
     album = member.activity.album
     palbum = member.activity.album_cover_url
     duration = member.activity.duration
-    quick_embed = discord.Embed(title = f"{member} slucha teraz {sname} z albumu {album}, sa tam artysci: {sartists}", description = f'Song duration **{duration}**', colour = 0xeb1e1e)
+    quick_embed = discord.Embed(title = f"{member} listens now {sname} from {album}, there are: {sartists}", description = f'Song duration **{duration}**', colour = 0xeb1e1e)
     quick_embed.set_thumbnail(url = palbum)
     await ctx.channel.send(embed = quick_embed)
 
@@ -102,10 +102,12 @@ async def listen(ctx, member : discord.Member):
 async def cannon(ctx, member : discord.Member):
     działonowy = discord.utils.find(lambda r: r.name == 'Działonowy', ctx.message.guild.roles)
     if działonowy in ctx.author.roles:
-        current_channel = member.voice.channel.id
-        channel_ids = [748293007765274654, 690951616047742996, 753960037164122245, 690951721874096239, 782001116313288734]
-        channel_ids.append(current_channel)
-        for channel_id in channel_ids:
+        current_channel_id = member.voice.channel.id
+        voice_channels = ctx.guild.voice_channels
+        voice_channels_ids = [channel.id for channel in voice_channels]
+        if voice_channels_ids[-1] != current_channel_id:
+            voice_channels_ids.append(current_channel_id)
+        for channel_id in voice_channels_ids:
             channel = client.get_channel(channel_id)
             await member.move_to(channel)
         gif_embed = discord.Embed(title = "KABOOM!")
@@ -264,6 +266,7 @@ async def play(ctx, url1 = "", url2 = "", url3 = "", url4 = "", url5 = "", url6 
 
     play_queue()
     
+
 @client.command()
 async def pause(ctx):
     time.sleep(0.1)
@@ -294,7 +297,7 @@ def get_ss_time(seconds, end):
     new_seconds = previous_seconds + (seconds % 60) + current_seconds
 
     print("Uplynelo: ", current_hours, current_minutes, current_seconds)
-    print("nowe czasy: ", new_hours, new_minutes, new_seconds)
+    print("Nowe czasy: ", new_hours, new_minutes, new_seconds)
 
     if new_seconds >= 60:
         new_minutes += int(new_seconds / 60)
@@ -403,7 +406,7 @@ async def help(ctx):
     embed.add_field(name = f"{bot_prefix}cannon <discordmember>", value = "User is being thrown to some specific channels", inline = False)
     embed.add_field(name = f"{bot_prefix}clear <value>", value = "Bot deletes messages with commands and its own back <value> messages", inline = False)
     embed.add_field(name = f"{bot_prefix}listen <discordmember>", value = "Bot sends what someone is listening to on Spotify", inline = False)
-    await ctx.send(embed=embed, delete_after = 30)
+    await ctx.send(embed = embed, delete_after = 30)
 
 
 client.run(token)
