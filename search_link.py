@@ -28,6 +28,9 @@ def polish_signs(url):
     while 'ś' in url or 'Ś' in url:
         url = url.replace('ś', 's')
         url = url.replace('Ś', 'S')
+    while 'ń' in url or 'Ń' in url:
+        url = url.replace('ń', 'n')
+        url = url.replace('Ń', 'N')
     return url
 
 def link(url):
@@ -37,5 +40,4 @@ def link(url):
     html = urllib.request.urlopen("https://www.youtube.com/results?search_query=" + str(url))
 
     video_ids = re.findall(r"watch\?v=(\S{11})", html.read().decode())
-    
     return str("https://www.youtube.com/watch?v=" + str(video_ids[0]))
