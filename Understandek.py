@@ -1,55 +1,35 @@
-from audioop import add
-from dis import dis
-from email import message
-from email.errors import MessageError
-from itertools import count
-from re import X
-from sqlite3 import Timestamp
-from sys import prefix
-from tabnanny import check
-from tracemalloc import start
-from xml import dom
-import colour
-
 import discord
+from discord import FFmpegOpusAudio
 from discord.ext import commands
-
-from discord.ext.commands import has_permissions
-
 from discord.ext.commands import Bot
+from discord.utils import get 
+import asyncio
+import os
+
 import random
 
-import youtube_dl
+import colour
 import search_link
-from discord import Spotify
-from discord.utils import get 
-from discord import FFmpegPCMAudio
-from youtube_dl import YoutubeDL
-from colorthief import ColorThief
 
-import asyncio
 import validators
 import datetime
 
-
+from youtube_dl import YoutubeDL
 from pytube import YouTube
 from pytube import Playlist
 import re
 import time
 
-import os
-from dotenv import load_dotenv
-load_dotenv()
 
 bot_prefix = ","
 
-intents = discord.Intents.default()
+intents = discord.Intents.all()
 intents.members = True
 intents.messages = True
 intents.presences = True
 client = commands.Bot(command_prefix = bot_prefix, intents = intents)
 
-token = os.environ['token']
+token = str(os.environ['token'])
 bot_id = int(os.environ['bot_id'])
 
 client.remove_command("help")
@@ -86,35 +66,6 @@ async def dc(ctx):
         await ctx.voice_client.disconnect()
     else:
         await ctx.channel.send('I am not in the voice channel!')
-
-@client.command()
-async def listen(ctx, member : discord.Member):
-    sname = member.activity.title
-    sartists = member.activity.artists
-    album = member.activity.album
-    palbum = member.activity.album_cover_url
-    duration = member.activity.duration
-    quick_embed = discord.Embed(title = f"{member} listens now {sname} from {album}, there are: {sartists}", description = f'Song duration **{duration}**', colour = 0xeb1e1e)
-    quick_embed.set_thumbnail(url = palbum)
-    await ctx.channel.send(embed = quick_embed)
-
-@client.command()
-async def cannon(ctx, member : discord.Member):
-    działonowy = discord.utils.find(lambda r: r.name == 'Działonowy', ctx.message.guild.roles)
-    if działonowy in ctx.author.roles:
-        current_channel_id = member.voice.channel.id
-        voice_channels = ctx.guild.voice_channels
-        voice_channels_ids = [channel.id for channel in voice_channels]
-        if voice_channels_ids[-1] != current_channel_id:
-            voice_channels_ids.append(current_channel_id)
-        for channel_id in voice_channels_ids:
-            channel = client.get_channel(channel_id)
-            await member.move_to(channel)
-        gif_embed = discord.Embed(title = "KABOOM!")
-        gif_embed.set_image(url = "https://media4.giphy.com/media/76zpU8jlNo5EHoEpjb/giphy.gif")
-        await ctx.channel.send(f'{member.mention} has been blown up!', embed = gif_embed)
-    else:
-        await ctx.channel.send('You do not have sufficient permissions!')
 
 # Function adds song to list of songs
 list_of_songs = []
@@ -187,37 +138,36 @@ def play_queue():
         ctx = ctx_queue[0]
         time.sleep(0.2)
         voice = get(client.voice_clients, guild = ctx.guild)
-
-        if not voice.is_playing():
-            global if_loop
-            started_time = 0
-            URL = info['formats'][0]['url']
-            ids = re.findall(r"watch\?v=(\S{11})", list_of_songs[0])
-            id = ids[0]
-            colour_id = colour.get_colour(id)
-
-            voice.play(FFmpegPCMAudio(URL, **FFMPEG_OPTIONS), after = lambda e: play_queue())
-            timer = FFMPEG_OPTIONS['before_options']
-            timer = timer[4:15]
-
-            global current_url, current_ctx
-            current_url = list_of_songs[0]
-            current_ctx = ctx
-            
-            time.sleep(1.5)
-            started_time = time.time()
-            
-            if voice.is_playing():
-                if '00:00:00.00' == timer:
-                    client.loop.create_task(show_status(ctx, video_title, duration, id, colour_id))
-                    previous_seconds = previous_minutes = previous_hours = 0
-                else: 
-                    client.loop.create_task(show_time(ctx, timer))
-                if if_loop == False:
-                    del list_of_songs[0]
-                    del ctx_queue[0]
-                    global embed_queue
-                    embed_queue.remove_field(0)       
+        global if_loop
+        started_time = 0
+        URL = info['formats'][0]['url']
+        ids = re.findall(r"watch\?v=(\S{11})", list_of_songs[0])
+        id = ids[0]
+        colour_id = colour.get_colour(id)
+        
+        voice.play(FFmpegOpusAudio(URL, **FFMPEG_OPTIONS), after = lambda e: play_queue())
+        
+        timer = FFMPEG_OPTIONS['before_options']
+        timer = timer[4:15]
+  
+        global current_url, current_ctx
+        current_url = list_of_songs[0]
+        current_ctx = ctx
+              
+        time.sleep(1.5)
+        started_time = time.time()
+              
+        if voice.is_playing():
+          if '00:00:00.00' == timer:
+              client.loop.create_task(show_status(ctx, video_title, duration, id, colour_id))
+              previous_seconds = previous_minutes = previous_hours = 0
+          else: 
+              client.loop.create_task(show_time(ctx, timer))
+          if if_loop == False:
+              del list_of_songs[0]
+              del ctx_queue[0]
+              global embed_queue
+              embed_queue.remove_field(0)       
                 
     else:
         FFMPEG_OPTIONS = {'before_options': '-ss 00:00:00.00 -reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5', 'options': '-vn'}      
@@ -383,13 +333,41 @@ async def loop(ctx):
             del ctx_queue[0]
             global embed_queue
             embed_queue.remove_field(0)
+            
+@client.command()
+async def listen(ctx, member : discord.Member):
+    sname = member.activity.title
+    sartists = member.activity.artists
+    album = member.activity.album
+    palbum = member.activity.album_cover_url
+    duration = member.activity.duration
+    quick_embed = discord.Embed(title = f"{member} listens now {sname} from {album}, there are: {sartists}", description = f'Song duration **{duration}**', colour = 0xeb1e1e)
+    quick_embed.set_thumbnail(url = palbum)
+    await ctx.channel.send(embed = quick_embed)
+
+@client.command()
+async def cannon(ctx, member : discord.Member):
+    działonowy = discord.utils.find(lambda r: r.name == 'Działonowy', ctx.message.guild.roles)
+    if działonowy in ctx.author.roles:
+        current_channel_id = member.voice.channel.id
+        voice_channels = ctx.guild.voice_channels
+        voice_channels_ids = [channel.id for channel in voice_channels]
+        if voice_channels_ids[-1] != current_channel_id:
+            voice_channels_ids.append(current_channel_id)
+        for channel_id in voice_channels_ids:
+            channel = client.get_channel(channel_id)
+            await member.move_to(channel)
+        gif_embed = discord.Embed(title = "KABOOM!")
+        gif_embed.set_image(url = "https://media4.giphy.com/media/76zpU8jlNo5EHoEpjb/giphy.gif")
+        await ctx.channel.send(f'{member.mention} has been blown up!', embed = gif_embed)
+    else:
+        await ctx.channel.send('You do not have sufficient permissions!')
 
 @client.command()
 async def coin(ctx):
     do_wylosowania = ('Heads', 'Tails')
     await ctx.channel.send(random.choice(do_wylosowania))
 
-# ctx - kanal na ktorym zostala wyslana wiadomosc z komenda :)
 @client.command()
 async def help(ctx):
     embed = discord.Embed(title = "Commands", url = "https://github.com/Resmakor", description = "powered by Resmakor", color = 0xeb1e1e)
@@ -407,6 +385,5 @@ async def help(ctx):
     embed.add_field(name = f"{bot_prefix}clear <value>", value = "Bot deletes messages with commands and its own back <value> messages", inline = False)
     embed.add_field(name = f"{bot_prefix}listen <discordmember>", value = "Bot sends what someone is listening to on Spotify", inline = False)
     await ctx.send(embed = embed, delete_after = 30)
-
 
 client.run(token)
