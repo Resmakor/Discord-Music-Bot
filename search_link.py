@@ -1,5 +1,4 @@
 import urllib.request
-
 import re
 
 
@@ -36,8 +35,7 @@ def polish_signs(url):
 def link(url):
     url = polish_signs(url)
     url = url.replace(" ", "+")
-
     html = urllib.request.urlopen("https://www.youtube.com/results?search_query=" + str(url))
-
     video_ids = re.findall(r"watch\?v=(\S{11})", html.read().decode())
+
     return str("https://www.youtube.com/watch?v=" + str(video_ids[0]))
