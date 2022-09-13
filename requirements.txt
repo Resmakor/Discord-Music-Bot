@@ -1,0 +1,8 @@
+discord.py
+discord.py[voice]
+PyNaCl
+colorthief
+regex
+validators
+youtube_dl
+pytube
