@@ -6,3 +6,4 @@ regex
 validators
 youtube_dl
 pytube
+unidecode
