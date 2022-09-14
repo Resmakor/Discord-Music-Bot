@@ -198,6 +198,7 @@ async def loop(ctx):
 ```
 - Function starts loop by changing ```if_loop``` value.
 Loop makes it so that songs are no longer removed from the ```list_of_songs``` and ```ctx_queue```.
+
 ![alt text](https://github.com/Resmakor/Discord-Music-Bot/blob/main/snippets/loop_command.png?raw=true)
 
 #
@@ -206,6 +207,7 @@ Loop makes it so that songs are no longer removed from the ```list_of_songs``` a
 async def listen(ctx, member : discord.Member):
 ```
 - Function send messages with some details about discord member who's listening to song on Spotify. Embed is not impressive, that command was fully made for fun.
+
 ![alt text](https://github.com/Resmakor/Discord-Music-Bot/blob/main/snippets/listen_command_2.png?raw=true)
 
 #
@@ -225,4 +227,4 @@ async def coin(ctx):
 @client.command()
 async def help(ctx):
 ```
-- Function shows available comments with description.
+- Function shows available commands with description.
