@@ -215,7 +215,7 @@ async def listen(ctx, member : discord.Member):
 @client.command()
 async def cannon(ctx, member : discord.Member):
 ```
-- Bot is moving specific user through all channels. Afterwards user is back on his previous voice channel. You can see how it works in demo on YouTube. You have to have ```cannon``` rank.
+- Bot is moving specific user through all channels. Afterwards user is back on his previous voice channel. You can see how it works in demo on YouTube. You have to own ```cannon``` rank.
 #
 ```python
 @client.command()
