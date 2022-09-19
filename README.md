@@ -3,7 +3,7 @@
 
 
 ## Description
-"Understandek" is a Discord Music Bot with many other features. At first (January 2022) Understandek was made for fun and due to the fact that most of the available music bots at that time were blocked from Discord. In September 2022 bot was refactorized a bit so that others can use it more easily. Bot was made in Python. I tried to wrote it as simple as possible. Video demo was recorded before refactorization, however it shows Understandek's main capabilities.
+"Understandek" is a Discord Music Bot with many other features. At first (January 2022) Understandek was made for fun and due to the fact that most of the available music bots at that time were blocked from Discord. In September 2022 bot was refactorized a bit so that others can use it more easily. Bot was made in Python. I tried to write it as simple as possible. Video demo was recorded before refactorization, however it shows Understandek's main capabilities.
 
 ## File "colour.py"
 In file "colour.py" there is one function called ```get_colour``` responsible for finding the most suitable Discord embed colour. From the YouTube thumbnail the color palettes are separated and the middle one is always chosen.
